@@ -1,0 +1,8 @@
+streamlit
+openai
+mysql-connector-python
+python-dotenv
+speechrecognition
+pygame
+requests
+beautifulsoup4
