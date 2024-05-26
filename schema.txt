@@ -1,0 +1,106 @@
+-- Tabella per le collezioni
+CREATE TABLE Collezione (
+    collezione_id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    descrizione TEXT,
+    designer VARCHAR(100)
+);
+
+-- Tabella per i profili delle ante
+CREATE TABLE ProfiloAnta (
+    profilo_anta_id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    descrizione TEXT,
+    spessore_mm INT,
+    collezione_id INT,
+    FOREIGN KEY (collezione_id) REFERENCES Collezione(collezione_id)
+);
+
+-- Tabella per i tipi di apertura
+CREATE TABLE TipoApertura (
+    tipo_apertura_id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL
+);
+
+-- Tabella di relazione tra profili delle ante e tipi di apertura
+CREATE TABLE AperturaAnta (
+    profilo_anta_id INT,
+    tipo_apertura_id INT,
+    abilitato BOOLEAN,
+    PRIMARY KEY (profilo_anta_id, tipo_apertura_id),
+    FOREIGN KEY (profilo_anta_id) REFERENCES ProfiloAnta(profilo_anta_id),
+    FOREIGN KEY (tipo_apertura_id) REFERENCES TipoApertura(tipo_apertura_id)
+);
+
+-- Tabella per le finiture
+CREATE TABLE Finitura (
+    finitura_id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    descrizione TEXT,
+    materiale VARCHAR(100),
+    collezione_id INT,
+    FOREIGN KEY (collezione_id) REFERENCES Collezione(collezione_id)
+);
+
+-- Tabella per i colori delle finiture
+CREATE TABLE ColoreFinitura (
+    colore_finitura_id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    codice VARCHAR(10),
+    finitura_id INT,
+    FOREIGN KEY (finitura_id) REFERENCES Finitura(finitura_id)
+);
+
+-- Tabella per le maniglie
+CREATE TABLE Maniglia (
+    maniglia_id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    -- Colonna finitura utilizza JSON per memorizzare diverse finiture
+    -- Esempio: '["Champagne", "Nickel Nero lucido", "Nero", "Titanio"]'
+    finitura JSON 
+);
+
+-- Tabella per le caratteristiche generali delle collezioni
+CREATE TABLE CaratteristicaGenerale (
+    caratteristica_id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    descrizione TEXT,
+    collezione_id INT,
+    FOREIGN KEY (collezione_id) REFERENCES Collezione(collezione_id)
+);
+
+-- Tabella per le dimensioni dei moduli
+CREATE TABLE DimensioneModulo (
+    dimensione_modulo_id INT AUTO_INCREMENT PRIMARY KEY,
+    tipo_modulo VARCHAR(50),
+    -- Colonna profondita_cm utilizza JSON per memorizzare diverse profondità
+    -- Esempio: '[35, 47, 62, 67]'
+    profondita_cm JSON,
+    -- Colonna larghezza_cm utilizza JSON per memorizzare diverse larghezze
+    -- Esempio: '[15, 30, 45, 60, 75, 90, 105, 120, 180, 240]'
+    larghezza_cm JSON,
+    -- Colonna altezza_cm utilizza JSON per memorizzare diverse altezze
+    -- Esempio: '[39, 48, 58.5, 60, 78, 84]'
+    altezza_cm JSON,
+    collezione_id INT,
+    FOREIGN KEY (collezione_id) REFERENCES Collezione(collezione_id)
+);
+
+-- Tabella per le finiture dei cassetti
+CREATE TABLE FinituraCassetto (
+    finitura_cassetto_id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    materiale VARCHAR(100),
+    colore VARCHAR(100),
+    collezione_id INT,
+    FOREIGN KEY (collezione_id) REFERENCES Collezione(collezione_id)
+);
+
+-- Tabella di relazione tra profili delle ante e finiture
+CREATE TABLE FinituraAnta (
+    profilo_anta_id INT,
+    finitura_id INT,
+    PRIMARY KEY (profilo_anta_id, finitura_id),
+    FOREIGN KEY (profilo_anta_id) REFERENCES ProfiloAnta(profilo_anta_id),
+    FOREIGN KEY (finitura_id) REFERENCES Finitura(finitura_id)
+);
